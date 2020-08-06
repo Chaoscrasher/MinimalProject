@@ -1,0 +1,33 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceSets.test.java.srcDirs = ['test/main/java']
+sourceSets.main.java.srcDirs = ['src/main/java']
+
+sourceSets {
+    main {
+        resources {
+            include '*.yml'
+        }
+    }
+}
+
+jar
+{
+    from
+	{
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+
+repositories {
+  maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+  maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+}
+
+dependencies {
+  // Pick only one of these and read the comment in the repositories block.
+  compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT' // The Spigot API with no shadowing. Requires the OSS repo.
+  compile fileTree(dir: 'libs', include: '*.jar')
+}
